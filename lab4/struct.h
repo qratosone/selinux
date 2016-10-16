@@ -1,24 +1,30 @@
 #ifndef STRUCT_H
 #define STRUCT_H
 #include <stdlib.h>
+#include "Linktable.h"
 #define CMD_MAX_LEN 128
 #define DESC_LEN 1024
 #define CMD_NUM 10
 typedef struct DataNode
 {
+    tLinkTableNode* next;
     char* cmd;
     char* desc;
     int (*handler)();
-    struct DataNode *next;
 }tDataNode;
+
 int Help();
 int Version();
 int Exit();
+
+
 static tDataNode head[]=
 {
-    {"help","this is help cmd!",Help,&head[1]},
-    {"version","menu program v1.0",Version,&head[2]},
-    {"exit","exit the program",Exit,NULL}
+    {(tLinkTableNode*)&head[1],"help","this is help cmd!",Help},
+    {(tLinkTableNode*)&head[2],"version","menu program v1.0",Version},
+    {NULL,"exit","exit the program",Exit}
 };
-void search_command(char* input);
+tLinkTable* create_table();
+void search_command(tLinkTable* table,char* input);
+void destroy_table(tLinkTable* table);
 #endif
